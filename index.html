@@ -51,6 +51,11 @@
       50% { transform: translateY(-10px); }
     }
 
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
     .animate-fadeIn {
       animation: fadeIn 0.5s ease-out;
     }
@@ -65,6 +70,12 @@
 
     .animate-bounce-slow {
       animation: bounce 2s ease-in-out infinite;
+    }
+
+    .animate-shimmer {
+      animation: shimmer 2s linear infinite;
+      background: linear-gradient(to right, #10b981 0%, #34d399 50%, #10b981 100%);
+      background-size: 1000px 100%;
     }
 
     /* Hover effects */
@@ -137,6 +148,31 @@
 
     .spinner {
       animation: spin 1s linear infinite;
+    }
+
+    /* Estilo mejorado para "Ya Justificado" */
+    .justified-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .justified-badge::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s linear infinite;
+    }
+
+    .justified-badge-icon {
+      background: rgba(255, 255, 255, 0.95);
+      animation: pulse 2s ease-in-out infinite;
     }
   </style>
 </head>
@@ -448,7 +484,7 @@
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  <i data-lucide="user-check" style={{width:20,height:20}}></i>
+                  <i data-lucide="graduation-cap" style={{width:20,height:20}}></i>
                   Estudiante
                 </button>
                 <button 
@@ -459,7 +495,7 @@
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  <i data-lucide="shield-alert" style={{width:20,height:20}}></i>
+                  <i data-lucide="shield-check" style={{width:20,height:20}}></i>
                   Inspección
                 </button>
               </div>
@@ -746,12 +782,16 @@
       return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fadeIn">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative border-4 border-institutional-yellow animate-slideIn">
-            <button onClick={() => { stopCamera(); onClose(); }} className="absolute top-4 right-4 bg-institutional-yellow text-gray-800 hover:bg-institutional-yellow-dark rounded-lg p-2 transition-colors z-10 hover-scale">
-              <i data-lucide="x" style={{width:20,height:20}}></i>
+            <button 
+              onClick={() => { stopCamera(); onClose(); }} 
+              className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all z-10 hover-scale shadow-lg flex items-center justify-center"
+              style={{width: '40px', height: '40px'}}
+            >
+              <i data-lucide="x" style={{width:24,height:24}}></i>
             </button>
             <div className="bg-institutional-blue p-4">
               <div className="flex items-center gap-2 text-white">
-                <i data-lucide="camera" style={{width:24,height:24}}></i>
+                <i data-lucide="qr-code" style={{width:24,height:24}}></i>
                 <h2 className="text-xl font-bold">Escanear Código QR</h2>
               </div>
             </div>
@@ -1067,8 +1107,8 @@
                 <i data-lucide="history" style={{width:28,height:28}} className="animate-bounce-slow"></i>
                 <h2 className="text-2xl font-bold">Historial de Atrasos</h2>
               </div>
-              <button onClick={onRefresh} className="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 flex items-center gap-2 border-2 border-institutional-blue hover-scale">
-                <i data-lucide="refresh-cw" style={{width:18,height:18}}></i> Actualizar
+              <button onClick={onRefresh} className="bg-gradient-to-r from-white to-gray-50 text-institutional-blue px-5 py-2.5 rounded-lg font-bold hover:from-gray-50 hover:to-white flex items-center gap-2 border-2 border-institutional-blue hover-scale shadow-md">
+                <i data-lucide="refresh-cw" style={{width:20,height:20}}></i> Actualizar
               </button>
             </div>
           </div>
@@ -1099,9 +1139,9 @@
               </select>
               <button 
                 onClick={clearFilters}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 flex items-center justify-center gap-2 hover-scale"
+                className="bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 px-4 py-2 rounded-lg font-bold hover:from-gray-300 hover:to-gray-200 flex items-center justify-center gap-2 hover-scale shadow-sm border-2 border-gray-400"
               >
-                <i data-lucide="x-circle" style={{width:18,height:18}}></i> Limpiar
+                <i data-lucide="filter-x" style={{width:20,height:20}}></i> Limpiar
               </button>
             </div>
           </div>
@@ -1176,10 +1216,12 @@
                                     Justificar
                                   </button>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md">
-                                    <i data-lucide="check-circle-2" style={{width:16,height:16}}></i>
-                                    Ya Justificado
-                                  </span>
+                                  <div className="justified-badge inline-flex items-center gap-2 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg hover-scale animate-fadeIn">
+                                    <div className="justified-badge-icon rounded-full p-1">
+                                      <i data-lucide="badge-check" style={{width:16,height:16}} className="text-emerald-600"></i>
+                                    </div>
+                                    <span className="tracking-wide" style={{textShadow: '0 1px 2px rgba(0,0,0,0.3)'}}>JUSTIFICADO</span>
+                                  </div>
                                 )}
                               </td>
                             )}
@@ -1418,11 +1460,11 @@
           {userRole === 'inspeccion' && (
             <nav className="bg-white shadow-md sticky top-0 z-40 border-b-4 border-institutional-yellow">
               <div className="container mx-auto px-4">
-                <div className="flex justify-center gap-2 py-4">
-                  <button onClick={()=>setView('scanner')} className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all hover-scale ${view==='scanner' ? 'bg-institutional-yellow text-gray-800 shadow-lg border-2 border-institutional-blue' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                <div className="flex justify-center gap-3 py-4">
+                  <button onClick={()=>setView('scanner')} className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all hover-scale ${view==='scanner' ? 'bg-gradient-to-r from-institutional-yellow to-institutional-yellow-dark text-gray-800 shadow-lg border-2 border-institutional-blue' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border-2 border-gray-300'}`}>
                     <i data-lucide="user-plus" style={{width:20,height:20}}></i> Registrar Atraso
                   </button>
-                  <button onClick={()=>setView('history')} className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all hover-scale ${view==='history' ? 'bg-institutional-yellow text-gray-800 shadow-lg border-2 border-institutional-blue' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                  <button onClick={()=>setView('history')} className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all hover-scale ${view==='history' ? 'bg-gradient-to-r from-institutional-yellow to-institutional-yellow-dark text-gray-800 shadow-lg border-2 border-institutional-blue' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border-2 border-gray-300'}`}>
                     <i data-lucide="list-checks" style={{width:20,height:20}}></i> Historial
                   </button>
                 </div>
@@ -1485,7 +1527,11 @@
   </script>
 
   <script>
+    // Renderizar iconos Lucide múltiples veces para asegurar que todos se muestren
+    setTimeout(()=> { if (window.lucide) window.lucide.replace(); }, 100);
     setTimeout(()=> { if (window.lucide) window.lucide.replace(); }, 500);
+    setTimeout(()=> { if (window.lucide) window.lucide.replace(); }, 1000);
+    setTimeout(()=> { if (window.lucide) window.lucide.replace(); }, 2000);
   </script>
 </body>
 </html>
